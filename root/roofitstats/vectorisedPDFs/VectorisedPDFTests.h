@@ -14,7 +14,7 @@
  * listed in LICENSE (http://roofit.sourceforge.net/license.txt)             *
  *****************************************************************************/
 
-#include "RooBatchCompute.h"
+#include "RunContext.h"
 #include "RooArgSet.h"
 #include "RooRealVar.h"
 #include "RooDataSet.h"
@@ -94,7 +94,7 @@ class PDFTestWeightedData : public PDFTest {
     TEST_F(TEST_CLASS, TEST_NAME) {\
   resetParameters();\
   double relativeError, maximalRelativeError=0.0;\
-  compareFixedValues(relativeError, false, false, true);\
+  compareFixedValues(relativeError, false, false, false);\
   maximalRelativeError = std::max(maximalRelativeError,relativeError);\
   \
   for (unsigned int i=0; i<5 && !HasFailure(); ++i) {\

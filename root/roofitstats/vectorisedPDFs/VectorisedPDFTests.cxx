@@ -29,7 +29,6 @@
 #include "Math/Util.h"
 #include "RooHelpers.h"
 
-#include <memory>
 #include <numeric>
 #include <ctime>
 #include <chrono>
@@ -474,7 +473,7 @@ std::unique_ptr<RooFitResult> PDFTest::runBatchFit(RooAbsPdf* pdf) {
 
   MyTimer batchTimer("Fitting batch mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(true),
+      RooFit::BatchMode(-1),
       RooFit::SumW2Error(false),
       RooFit::Optimize(1),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
