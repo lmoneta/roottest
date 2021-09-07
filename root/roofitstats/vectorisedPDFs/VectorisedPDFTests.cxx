@@ -200,7 +200,7 @@ void PDFTest::compareFixedValues(double& maximalError, bool normalise, bool comp
   RooArgSet* observables = _pdf->getObservables(*_dataUniform);
   RooArgSet* parameters  = _pdf->getParameters(*_dataUniform);
 
-  std::vector<RooBatchCompute::RunContext> evalData;
+  std::vector<rbc::RunContext> evalData;
   auto callBatchFunc = [compareLogs,&evalData,this](const RooAbsPdf& pdf, std::size_t begin, std::size_t len, const RooArgSet* theNormSet)
       -> RooSpan<const double> {
     evalData.emplace_back();
@@ -473,7 +473,7 @@ std::unique_ptr<RooFitResult> PDFTest::runBatchFit(RooAbsPdf* pdf) {
 
   MyTimer batchTimer("Fitting batch mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(-1),
+      RooFit::BatchMode(1),
       RooFit::SumW2Error(false),
       RooFit::Optimize(1),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
