@@ -28,6 +28,7 @@
 #include "RooConstVar.h"
 #include "Math/Util.h"
 #include "RooHelpers.h"
+#include "rbc.h"
 
 #include <numeric>
 #include <ctime>
@@ -473,7 +474,7 @@ std::unique_ptr<RooFitResult> PDFTest::runBatchFit(RooAbsPdf* pdf) {
 
   MyTimer batchTimer("Fitting batch mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(1),
+      RooFit::BatchMode(rbc::Cpu),
       RooFit::SumW2Error(false),
       RooFit::Optimize(1),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
@@ -520,7 +521,7 @@ std::unique_ptr<RooFitResult> PDFTest::runScalarFit(RooAbsPdf* pdf) {
 
   MyTimer singleTimer("Fitting scalar mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(false),
+      RooFit::BatchMode(rbc::Cpu),
       RooFit::SumW2Error(false),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
       _multiProcess > 0 ? RooFit::NumCPU(_multiProcess) : RooCmdArg()
