@@ -32,7 +32,7 @@ TEST(GaussBinned, RetrieveBatches) {
   RooGaussian gaus("gaus", "gaus", x, m, s);
   auto dataHist = gaus.generateBinned(x, 10000);
 
-  RooBatchCompute::RunContext evalData;
+  rbc::RunContext evalData;
   dataHist->getBatches(evalData, 0, dataHist->numEntries());
 
   auto batchVals = gaus.getValues(evalData, nullptr);
@@ -41,7 +41,7 @@ TEST(GaussBinned, RetrieveBatches) {
   EXPECT_TRUE(std::none_of(batchVals.begin(), batchVals.end(), [](double val){return val <= 0.;}));
   std::vector<double> savedProbs(batchVals.begin(), batchVals.end());
 
-  RooBatchCompute::RunContext evalDataWithNorm;
+  rbc::RunContext evalDataWithNorm;
   dataHist->getBatches(evalDataWithNorm, 0, dataHist->numEntries());
   RooArgSet normSet(x);
   auto batchValsNorm = gaus.getValues(evalDataWithNorm, &normSet);
@@ -89,7 +89,7 @@ TEST(GaussBinned, AskForLargerBatch) {
 
   {
     RooHelpers::HijackMessageStream hijack(RooFit::ERROR, RooFit::DataHandling);
-    RooBatchCompute::RunContext evalData;
+    rbc::RunContext evalData;
     dataHist->getBatches(evalData, 30, 21);
 
     EXPECT_FALSE(hijack.str().empty()) << "Asking for too large batch should issue error message.";
@@ -151,7 +151,7 @@ TEST_P(GaussBinnedFit, BatchFit) {
   x.setBins(50);
   std::unique_ptr<RooDataHist> dataHist( gaus.generateBinned(x, 10000) );
 
-  const bool batchMode = GetParam();
+  const rbc::BatchMode batchMode = GetParam() ? rbc::Cpu : rbc::Off;
   m.setVal(-1.);
   s.setVal(3.);
   MyTimer timer(batchMode ? "BatchBinned" : "ScalarBinned");
@@ -169,8 +169,7 @@ TEST_P(GaussBinnedFit, BatchFitFineBinsBiased) {
   s.setVal(4.);
   std::unique_ptr<RooDataHist> dataHist( gaus.generateBinned(x, 20000) );
 
-  const bool batchMode = GetParam();
-  m.setVal(-1.);
+  const rbc::BatchMode batchMode = GetParam() ? rbc::Cpu : rbc::Off;  m.setVal(-1.);
   s.setVal(3.);
   MyTimer timer(batchMode ? "BatchFineBinned" : "ScalarFineBinned");
   gaus.fitTo(*dataHist, RooFit::BatchMode(batchMode), RooFit::PrintLevel(-1));
@@ -189,7 +188,7 @@ TEST_P(GaussBinnedFit, DISABLED_BatchFitFineBins) {
   s.setVal(4.);
   std::unique_ptr<RooDataHist> dataHist( gaus.generateBinned(x, 20000) );
 
-  const bool batchMode = GetParam();
+  const rbc::BatchMode batchMode = GetParam() ? rbc::Cpu : rbc::Off;
   m.setVal(-1.);
   s.setVal(3.);
   MyTimer timer(batchMode ? "BatchFineBinned" : "ScalarFineBinned");

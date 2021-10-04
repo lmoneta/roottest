@@ -64,5 +64,5 @@ ROOT_ADD_GTEST(testNovosibirsk testNovosibirsk.cxx
 ROOT_ADD_GTEST(testVoigtian testVoigtian.cxx
               LIBRARIES VectorisedPDFTests)
 ROOT_ADD_GTEST(testGaussBinned testGaussBinned.cxx
-              LIBRARIES ROOT::Gpad ROOT::RooFitCore ROOT::RooFit)
+              LIBRARIES ROOT::Gpad ROOT::RooFitCore ROOT::RooFit RooBatchCompute)
 

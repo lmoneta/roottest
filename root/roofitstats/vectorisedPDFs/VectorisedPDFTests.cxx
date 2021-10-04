@@ -28,8 +28,8 @@
 #include "RooConstVar.h"
 #include "Math/Util.h"
 #include "RooHelpers.h"
+#include "rbc.h"
 
-#include <memory>
 #include <numeric>
 #include <ctime>
 #include <chrono>
@@ -201,7 +201,7 @@ void PDFTest::compareFixedValues(double& maximalError, bool normalise, bool comp
   RooArgSet* observables = _pdf->getObservables(*_dataUniform);
   RooArgSet* parameters  = _pdf->getParameters(*_dataUniform);
 
-  std::vector<RooBatchCompute::RunContext> evalData;
+  std::vector<rbc::RunContext> evalData;
   auto callBatchFunc = [compareLogs,&evalData,this](const RooAbsPdf& pdf, std::size_t begin, std::size_t len, const RooArgSet* theNormSet)
       -> RooSpan<const double> {
     evalData.emplace_back();
@@ -474,7 +474,7 @@ std::unique_ptr<RooFitResult> PDFTest::runBatchFit(RooAbsPdf* pdf) {
 
   MyTimer batchTimer("Fitting batch mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(true),
+      RooFit::BatchMode(rbc::Cpu),
       RooFit::SumW2Error(false),
       RooFit::Optimize(1),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
@@ -521,7 +521,7 @@ std::unique_ptr<RooFitResult> PDFTest::runScalarFit(RooAbsPdf* pdf) {
 
   MyTimer singleTimer("Fitting scalar mode " + _name);
   auto result = pdf->fitTo(*_dataFit,
-      RooFit::BatchMode(false),
+      RooFit::BatchMode(rbc::Cpu),
       RooFit::SumW2Error(false),
       RooFit::PrintLevel(_printLevel), RooFit::Save(),
       _multiProcess > 0 ? RooFit::NumCPU(_multiProcess) : RooCmdArg()
