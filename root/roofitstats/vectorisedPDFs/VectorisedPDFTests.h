@@ -76,7 +76,7 @@ class PDFTest : public ::testing::Test
     double _toleranceCorrelation{1.E-4};
     double _toleranceCompareBatches{1.E-14};
     double _toleranceCompareLogs{2.E-14};
-    int _printLevel{-1};
+    int _printLevel{1};
     unsigned int _multiProcess{0};
 };
 
@@ -186,4 +186,3 @@ class PDFTestWeightedData : public PDFTest {
   ASSERT_NE(result, nullptr);\
   checkParameters();\
 }
-

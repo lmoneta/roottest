@@ -31,11 +31,13 @@ class TestRooPolynomial : public PDFTest
 {
   protected:
     TestRooPolynomial() :
-      PDFTest("Polynomial(...)")
+      PDFTest("Polynomial")
   {
-      auto x = new RooRealVar("x", "x", 0, 10);
+      auto x = new RooRealVar("x", "x", 0, 1);
       auto a1 = new RooRealVar("a1", "First coefficient", 5, 0, 10);
-      auto a2 = new RooRealVar("a2", "Second coefficient", 1, 0, 10);
+      auto a2 = new RooRealVar("a2", "Second coefficient", 5, 0, 10);
+      //auto a3 = new RooRealVar("a3", "Third coefficient", 6,0,10);
+
       auto a3 = new RooFormulaVar("a3", "Third coefficient", "a1+a2", RooArgList(*a1, *a2));
 
       _pdf = std::make_unique<RooPolynomial>("pol", "Polynomial", *x, RooArgList(*a1, *a2, *a3));
@@ -43,7 +45,7 @@ class TestRooPolynomial : public PDFTest
 
       for (auto var : {x, a1}) {
         _variables.addOwned(*var);
-//        _variablesToPlot.add(var);
+      //  _variablesToPlot.add(*var);
       }
 
       for (auto par : {a2}) {
@@ -51,6 +53,8 @@ class TestRooPolynomial : public PDFTest
       }
 
       _otherObjects.addOwned(*a3);
+
+
   }
 };
 
@@ -281,7 +285,3 @@ COMPARE_FIXED_VALUES_NORM_LOG(TestNonVecGaussInMeanAndX, CompareFixedNormLog)
 FIT_TEST_SCALAR(TestNonVecGaussInMeanAndX, RunScalar)
 FIT_TEST_BATCH(TestNonVecGaussInMeanAndX, RunBatch)
 FIT_TEST_BATCH_VS_SCALAR(TestNonVecGaussInMeanAndX, CompareBatchScalar)
-
-
-
-
